@@ -22,5 +22,17 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: 'maven'
-      - name: Build Docker image
-        run: ./mvnw spring-boot:build-image -DskipTests
+      - name: Log in to GitHub Container Registry
+        if: github.event_name != 'pull_request'
+        env:
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+      - name: Build and publish Docker image
+        env:
+          IMAGE_NAME: ghcr.io/${{ github.repository }}
+          PUBLISH_IMAGE: ${{ github.event_name != 'pull_request' }}
+        run: |
+          IMAGE_NAME="${IMAGE_NAME,,}"
+          ./mvnw spring-boot:build-image -DskipTests \
+            -Dspring-boot.build-image.imageName="$IMAGE_NAME:latest" \
+            -Dspring-boot.build-image.publish="$PUBLISH_IMAGE"
