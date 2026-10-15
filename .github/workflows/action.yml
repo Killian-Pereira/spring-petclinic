@@ -1,0 +1,12 @@
+name: "Hello World Action"
+description: "Une action simple qui imprime 'Hello World'"
+inputs:
+  name:
+    description: "Nom de l'utilisateur"
+    default: "World"
+outputs:
+  message:
+    description: "Le message généré par l'action"
+runs:
+  using: "node16"
+  main: "index.js"
