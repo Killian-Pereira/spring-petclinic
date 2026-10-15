@@ -61,3 +61,4 @@ jobs:
           docker push "$IMAGE_NAME:$VERSION"
           docker push "$IMAGE_NAME:$GITHUB_SHA"
           docker push "$IMAGE_NAME:latest"
+
